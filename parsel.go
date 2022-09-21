@@ -94,3 +94,4 @@ func (s *Selector) GetAll() []string {
 func (s *Selector) GetText() string {
 	return s.Text
 }
+
