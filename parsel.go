@@ -68,7 +68,6 @@ func (s *Selector) Re(reString string) *Selector {
 	s.XpathStringResult = make([]string, 0)
 	compiled := regexp.MustCompile(reString)
 	match := compiled.FindAllStringSubmatch(s.Text, -1)
-	//fmt.Println(match)
 	for _, first := range match {
 		for _, second := range first {
 			s.XpathStringResult = append(s.XpathStringResult, second)
@@ -94,4 +93,3 @@ func (s *Selector) GetAll() []string {
 func (s *Selector) GetText() string {
 	return s.Text
 }
-
