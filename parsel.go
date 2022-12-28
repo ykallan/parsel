@@ -10,7 +10,7 @@ import (
 
 var err error
 
-type Selector struct {
+type Select struct {
 	Text string
 	err  []error
 
@@ -20,9 +20,15 @@ type Selector struct {
 	XpathNodeResult   []*html.Node
 }
 
-func (s *Selector) Help() {
+func Selector(Text string) Select {
+	s := Select{}
+	s.Load(Text)
+	return s
+}
+
+func (s *Select) Help() {
 	helpString := `
-selector := Selector{}.Load(text string)
+selector := Selector{Text:text}
 xpathObject := selector.Xpath("//xpath string")
 string := xpathObject.Get()
 []string := xpathObject.GetAll()
@@ -30,7 +36,7 @@ string := xpathObject.Get()
 	fmt.Println(helpString)
 }
 
-func (s *Selector) Load(text string) {
+func (s *Select) Load(text string) {
 	s.Text = text
 	s.XpathNode, err = htmlquery.Parse(strings.NewReader(text))
 	if err != nil {
@@ -39,7 +45,7 @@ func (s *Selector) Load(text string) {
 	}
 }
 
-func (s *Selector) Xpath(xpath string) *Selector {
+func (s *Select) Xpath(xpath string) *Select {
 	fmt.Println("s.linkFlag =", s.linkFlag)
 	if s.linkFlag {
 		// already get A xpath node, can use link extract
@@ -64,7 +70,7 @@ func (s *Selector) Xpath(xpath string) *Selector {
 	return s
 }
 
-func (s *Selector) Re(reString string) *Selector {
+func (s *Select) Re(reString string) *Select {
 	s.XpathStringResult = make([]string, 0)
 	compiled := regexp.MustCompile(reString)
 	match := compiled.FindAllStringSubmatch(s.Text, -1)
@@ -76,20 +82,20 @@ func (s *Selector) Re(reString string) *Selector {
 	return s
 }
 
-func (s *Selector) Get() string {
-	return s.XpathNode.Data
+func (s *Select) Get() (string, bool) {
+	return s.XpathNode.Data, len(s.XpathNode.Data) > 0
 }
 
-func (s *Selector) GetAll() []string {
+func (s *Select) GetAll() ([]string, bool) {
 	newStringSlice := make([]string, 0)
 	for _, node := range s.XpathNodeResult {
 		//fmt.Println(node.Data)
 		newStringSlice = append(newStringSlice, node.Data)
 	}
 
-	return newStringSlice
+	return newStringSlice, len(newStringSlice) > 0
 }
 
-func (s *Selector) GetText() string {
+func (s *Select) GetText() string {
 	return s.Text
 }
