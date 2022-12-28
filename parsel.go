@@ -46,7 +46,7 @@ func (s *Select) Load(text string) {
 }
 
 func (s *Select) Xpath(xpath string) *Select {
-	fmt.Println("s.linkFlag =", s.linkFlag)
+	// fmt.Println("s.linkFlag =", s.linkFlag)
 	if s.linkFlag {
 		// already get A xpath node, can use link extract
 		newXpathNode := htmlquery.Find(s.XpathNode, xpath)
